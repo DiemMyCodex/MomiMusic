@@ -1,4 +1,4 @@
-package com.mochyy.mochymusic.canvas
+package com.momi.music.canvas
 
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals

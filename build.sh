@@ -19,7 +19,7 @@ CUSTOM_BUILD_INFO=""
 IS_CUSTOM_BUILD=false
 NIGHTLY_NUMBER=""
 
-BETA_NOTICE_FILE="app/src/main/kotlin/com/mochyy/mochymusic/ui/screens/beta/BetaNoticeScreen.kt"
+BETA_NOTICE_FILE="app/src/main/kotlin/com/momi/music/ui/screens/beta/BetaNoticeScreen.kt"
 
 cleanup() {
     # a nightly's fourth number only lives for its own build
@@ -170,12 +170,12 @@ if [ "$SKIP_BUILD" = false ]; then
 
     # update beta notice
     if [ -f "$BETA_NOTICE_FILE" ]; then
-        NOTICE_TITLE="mochy build #$BUILD_ATTEMPT $VARIANT"
+        NOTICE_TITLE="momi build #$BUILD_ATTEMPT $VARIANT"
         if [ -n "$CUSTOM_DATE" ]; then
-            NOTICE_TITLE="mochy build #$BUILD_ATTEMPT $VARIANT ($CUSTOM_DATE)"
+            NOTICE_TITLE="momi build #$BUILD_ATTEMPT $VARIANT ($CUSTOM_DATE)"
         fi
-        sed -i '' -e "s/text = \"Mochy DEV PREV\"/text = \"$NOTICE_TITLE\"/g" "$BETA_NOTICE_FILE"
-        sed -i '' -e "s/text = \"mochy build #[0-9]* .*\"/text = \"$NOTICE_TITLE\"/g" "$BETA_NOTICE_FILE"
+        sed -i '' -e "s/text = \"MomiMusic DEV PREV\"/text = \"$NOTICE_TITLE\"/g" "$BETA_NOTICE_FILE"
+        sed -i '' -e "s/text = \"momi build #[0-9]* .*\"/text = \"$NOTICE_TITLE\"/g" "$BETA_NOTICE_FILE"
         sed -i '' -e "s/text = \"[0-9]*\.[0-9]*\.[0-9]*DEV\"/text = \"$BASE_VERSION build#$BUILD_ATTEMPT\"/g" "$BETA_NOTICE_FILE"
         sed -i '' -e "s/text = \"[0-9]*\.[0-9]*\.[0-9]* build#[0-9]*\"/text = \"$BASE_VERSION build#$BUILD_ATTEMPT\"/g" "$BETA_NOTICE_FILE"
     fi
@@ -229,30 +229,30 @@ if [ "$PUBLISH_RELEASE" = true ]; then
         fi
     }
 
-    format_apk "*universal-${FLAVOR}-release.apk" "mochy-$VERSION_LABEL-universal.apk"
-    format_apk "*arm64-${FLAVOR}-release.apk" "mochy-$VERSION_LABEL-arm64-v8a.apk"
-    format_apk "*armeabi-${FLAVOR}-release.apk" "mochy-$VERSION_LABEL-armeabi-v7a.apk"
-    format_apk "*x86_64-${FLAVOR}-release.apk" "mochy-$VERSION_LABEL-x86_64.apk"
-    format_apk "*x86-${FLAVOR}-release.apk" "mochy-$VERSION_LABEL-x86.apk"
+    format_apk "*universal-${FLAVOR}-release.apk" "momi-$VERSION_LABEL-universal.apk"
+    format_apk "*arm64-${FLAVOR}-release.apk" "momi-$VERSION_LABEL-arm64-v8a.apk"
+    format_apk "*armeabi-${FLAVOR}-release.apk" "momi-$VERSION_LABEL-armeabi-v7a.apk"
+    format_apk "*x86_64-${FLAVOR}-release.apk" "momi-$VERSION_LABEL-x86_64.apk"
+    format_apk "*x86-${FLAVOR}-release.apk" "momi-$VERSION_LABEL-x86.apk"
 
     if [ -z "$CHANGELOG_TEXT" ]; then
-        CHANGELOG_TEXT="mochy $VERSION_LABEL ($BUILD_ATTEMPT)"
+        CHANGELOG_TEXT="momi $VERSION_LABEL ($BUILD_ATTEMPT)"
     fi
 
     # a nightly is its own prerelease, tagged by its version, so the app's nightly channel can tell them apart
     if [ -n "$NIGHTLY_NUMBER" ]; then
         TAG="nightly-$VERSION_LABEL"
-        TITLE="Mochy $VERSION_LABEL nightly ($BUILD_ATTEMPT)"
+        TITLE="MomiMusic $VERSION_LABEL nightly ($BUILD_ATTEMPT)"
         echo "Publishing nightly prerelease: '$TITLE'..."
         git tag -f "$TAG" main 2>/dev/null || true
         git push -f origin "$TAG" 2>/dev/null || true
         if gh release view "$TAG" >/dev/null 2>&1; then
             gh release edit "$TAG" --title "$TITLE" --notes "$CHANGELOG_TEXT" --prerelease
-            gh release upload "$TAG" "$OUTPUT_DIR"/mochy-"$VERSION_LABEL"-*.apk --clobber
+            gh release upload "$TAG" "$OUTPUT_DIR"/momi-"$VERSION_LABEL"-*.apk --clobber
         else
-            gh release create "$TAG" "$OUTPUT_DIR"/mochy-"$VERSION_LABEL"-*.apk --title "$TITLE" --notes "$CHANGELOG_TEXT" --prerelease
+            gh release create "$TAG" "$OUTPUT_DIR"/momi-"$VERSION_LABEL"-*.apk --title "$TITLE" --notes "$CHANGELOG_TEXT" --prerelease
         fi
-        echo "Nightly published to https://github.com/realidkroo/Mochy-Music/releases/tag/$TAG"
+        echo "Nightly published to https://github.com/DiemMyCodex/MomiMusic/releases/tag/$TAG"
         PUBLISH_RELEASE=false
     fi
 fi
@@ -263,17 +263,17 @@ if [ "$PUBLISH_RELEASE" = true ]; then
     git tag -f dev main 2>/dev/null || true
     git push -f origin dev 2>/dev/null || true
 
-    TITLE="mochy $BASE_VERSION ($BUILD_ATTEMPT)"
+    TITLE="momi $BASE_VERSION ($BUILD_ATTEMPT)"
     echo "Publishing GitHub release: '$TITLE'..."
 
     if gh release view dev >/dev/null 2>&1; then
         gh release edit dev --title "$TITLE" --notes "$CHANGELOG_TEXT" --prerelease
-        gh release upload dev "$OUTPUT_DIR"/mochy-"$BASE_VERSION"-*.apk --clobber
+        gh release upload dev "$OUTPUT_DIR"/momi-"$BASE_VERSION"-*.apk --clobber
     else
-        gh release create dev "$OUTPUT_DIR"/mochy-"$BASE_VERSION"-*.apk --title "$TITLE" --notes "$CHANGELOG_TEXT" --prerelease
+        gh release create dev "$OUTPUT_DIR"/momi-"$BASE_VERSION"-*.apk --title "$TITLE" --notes "$CHANGELOG_TEXT" --prerelease
     fi
 
-    echo "Release successfully published to https://github.com/realidkroo/Mochy-Music/releases/tag/dev"
+    echo "Release successfully published to https://github.com/DiemMyCodex/MomiMusic/releases/tag/dev"
 fi
 
 # install and launch
@@ -294,11 +294,11 @@ if [ "$INSTALL_ON_DEVICES" = true ]; then
     else
         DEVICES=$(adb devices | grep -v "^List" | grep -w "device" | cut -f1)
         
-        PACKAGE_NAME="com.mochyy.mochymusic"
+        PACKAGE_NAME="com.momi.music"
         if [ "$VARIANT" == "debug" ]; then
-            PACKAGE_NAME="com.mochyy.mochymusic.debug"
+            PACKAGE_NAME="com.momi.music.debug"
         elif [ "$VARIANT" == "profileable" ]; then
-            PACKAGE_NAME="com.mochyy.mochymusic.profileable"
+            PACKAGE_NAME="com.momi.music.profileable"
         fi
 
         if [ -z "$DEVICES" ]; then

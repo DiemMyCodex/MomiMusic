@@ -1,7 +1,7 @@
 #!/bin/zsh
 # helpers for leak and battery checks on a device: memory counts, per-thread cpu over a window, wake locks and sensors; source it, then call mem, heap, cpu or holds
-PKG=${PKG:-com.mochyy.mochymusic.debug}
-OUT=${PERF_OUT:-${TMPDIR:-/tmp}/mochy-perf}
+PKG=${PKG:-com.momi.music.debug}
+OUT=${PERF_OUT:-${TMPDIR:-/tmp}/momi-perf}
 mkdir -p $OUT
 
 pid() { adb shell pidof $PKG | tr -d '\r'; }
